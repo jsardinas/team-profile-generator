@@ -9,7 +9,8 @@ async function getTeamInfo(){
     const companyQuestion = [
         {
             name: 'company',
-            message: 'What is the name of the company? '
+            message: 'What is the name of the company? ',
+            validate: ans => ans !== "" || "Cannot be empty"
         },
     ];
 
@@ -20,15 +21,17 @@ async function getTeamInfo(){
         {
             name: 'name',
             message: "Enter the manager's name: ",
+            validate: ans => ans !== "" || "Cannot be empty"
         },
         {
             name: 'email',
-            message: ans =>  `Enter ${ans.name} email: `,
+            message: ans => `Enter ${ans.name} email: `,
             default: ans => `${ans.name}@${emailDomain}.com`
         },
         {
             name: 'office',
             message: ans => `Enter ${ans.name} office number: `,
+            validate: ans => ans !== "" || "Cannot be empty"
         }
     ];
 
@@ -48,7 +51,8 @@ async function getTeamInfo(){
     const engineerQuestions = [
         {
             name: 'name',
-            message: 'Enter enginner name: '
+            message: 'Enter enginner name: ',
+            validate: ans => ans !== "" || "Cannot be empty"
         },
         {
             name: 'email',
@@ -56,14 +60,16 @@ async function getTeamInfo(){
             default: ans => `${ans.name}@${emailDomain}.com`
         },
         {   name: 'attr',
-            message: ans => `Enter ${ans.name} github account: `
+            message: ans => `Enter ${ans.name} github account: `,
+            validate: ans => ans !== "" || "Cannot be empty"
         }
     ];
 
     const internQuestions = [
         {
             name: 'name',
-            message: 'Enter intern name: '
+            message: 'Enter intern name: ',
+            validate: ans => ans !== "" || "Cannot be empty"
         },
         {
             name: 'email',
@@ -71,7 +77,8 @@ async function getTeamInfo(){
             default: ans => `${ans.name}@${emailDomain}.com`
         },
         {   name: 'attr',
-            message: ans => `Enter ${ans.name} school: `
+            message: ans => `Enter ${ans.name} school: `,
+            validate: ans => ans !== "" || "Cannot be empty"
         }
     ];
 
@@ -89,7 +96,7 @@ async function getTeamInfo(){
         if (role == 'engineer')
             team.push(new Engineer(answers.name, answers.email, answers.attr));
         else
-            team.push(new Engineer(answers.name, answers.email, answers.attr));
+            team.push(new Intern(answers.name, answers.email, answers.attr));
         ans = await inquirer.prompt(menuQuestion);
     }
     return {'team':team, 'company':company};
