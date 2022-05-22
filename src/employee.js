@@ -1,6 +1,8 @@
+const utils = require('./utils');
+
 class Employee{
-    constructor(id, name, email){
-        this.id = id;
+    constructor(name, email){
+        this.id = utils.getNextId();
         this.name = name;
         this.email = email;
     }

@@ -22,6 +22,8 @@
   "homepage": "https://github.com/jsardinas/team-profile-generator#readme",
   "dependencies": {
     "inquirer": "^8.2.4",
-    "jest": "^28.1.0"
+    "jest": "^28.1.0",
+    "short-uuid": "^4.2.0",
+    "uuid": "^8.3.2"
   }
 }
