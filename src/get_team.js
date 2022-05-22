@@ -1,8 +1,6 @@
 const inquirer = require('inquirer');
-const Intern = require('./intern');
-const Engineer = require('./engineer');
-const Manager = require('./manager');
 const utils = require('./utils');
+const getEmployee = require('./employee_factory');
 
 async function getTeamInfo(){
 
@@ -29,14 +27,15 @@ async function getTeamInfo(){
             default: ans => `${ans.name}@${emailDomain}.com`
         },
         {
-            name: 'office',
+            name: 'attr',
             message: ans => `Enter ${ans.name} office number: `,
             validate: ans => ans !== "" || "Cannot be empty"
         }
     ];
 
-    const answerManager = await inquirer.prompt(managerQuestions);
-    const manager = new Manager(answerManager.name, answerManager.email, answerManager.office);
+    let answerManager = await inquirer.prompt(managerQuestions);
+    answerManager['role'] = 'manager';
+    const manager = getEmployee(answerManager)
     let team = [manager];
 
     const menuQuestion = [
@@ -93,12 +92,11 @@ async function getTeamInfo(){
         else
             questions = internQuestions;
         let answers = await inquirer.prompt(questions);
-        if (role == 'engineer')
-            team.push(new Engineer(answers.name, answers.email, answers.attr));
-        else
-            team.push(new Intern(answers.name, answers.email, answers.attr));
+        answers['role'] = role;
+        team.push(getEmployee(answers));
         ans = await inquirer.prompt(menuQuestion);
     }
+    console.log(team);
     return {'team':team, 'company':company};
 }
 
