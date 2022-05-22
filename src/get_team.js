@@ -33,8 +33,11 @@ async function getTeamInfo(){
         {
             name: 'email',
             message: ans => `Enter ${ans.name} email: `,
-            default: ans => `${ans.name}@${emailDomain}.com`,
-            validate: answer => emailRegex.test(answer) || "Invalid email address"
+            default: ans => {
+                m = ans.name.split(' ').map(x => x.toLowerCase()).join('.');
+                return `${m}@${emailDomain}.com`
+            },
+            validate: ans => emailRegex.test(ans) || "Invalid email address",
         },
         {
             name: 'attr',
@@ -61,7 +64,6 @@ async function getTeamInfo(){
     ]
 
     let ans = await inquirer.prompt(menuQuestion);
-    //console.log(ans.menu);
     while (ans.menu !== 'Quit'){
         role = ans.menu.split(' ')[2];
         employeeQuestions[0].message = ans => `Enter ${role} name: `;
@@ -71,7 +73,6 @@ async function getTeamInfo(){
         team.push(getEmployee(answers));
         ans = await inquirer.prompt(menuQuestion);
     }
-    console.log(team);
     return {'team':team, 'company':company};
 }
 
