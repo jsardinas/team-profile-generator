@@ -4,6 +4,14 @@ const getEmployee = require('./employee_factory');
 
 async function getTeamInfo(){
 
+    const attrMap = {
+        'intern': 'school',
+        'engineer': 'github username',
+        'manager': 'office number'
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     const companyQuestion = [
         {
             name: 'company',
@@ -15,9 +23,8 @@ async function getTeamInfo(){
     const {company} = await inquirer.prompt(companyQuestion);
     const emailDomain = utils.generateEmailDomain(company);
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    const managerQuestions = [
+    const employeeQuestions = [
         {
             name: 'name',
             message: "Enter the manager's name: ",
@@ -31,12 +38,15 @@ async function getTeamInfo(){
         },
         {
             name: 'attr',
-            message: ans => `Enter ${ans.name} office number: `,
+            message: '',
             validate: ans => ans !== "" || "Cannot be empty"
         }
     ];
 
-    let answerManager = await inquirer.prompt(managerQuestions);
+    let role = 'manager';
+    employeeQuestions[2].message = ans => `Enter ${ans.name} ${attrMap[role]}: `;
+
+    let answerManager = await inquirer.prompt(employeeQuestions);
     answerManager['role'] = 'manager';
     const manager = getEmployee(answerManager)
     let team = [manager];
@@ -50,53 +60,13 @@ async function getTeamInfo(){
         }
     ]
 
-    const engineerQuestions = [
-        {
-            name: 'name',
-            message: 'Enter enginner name: ',
-            validate: ans => ans !== "" || "Cannot be empty"
-        },
-        {
-            name: 'email',
-            message: ans => `Enter ${ans.name} email: `,
-            default: ans => `${ans.name}@${emailDomain}.com`,
-            validate: answer => emailRegex.test(answer) || "Invalid email address"
-        },
-        {   name: 'attr',
-            message: ans => `Enter ${ans.name} github account: `,
-            validate: ans => ans !== "" || "Cannot be empty"
-        }
-    ];
-
-    const internQuestions = [
-        {
-            name: 'name',
-            message: 'Enter intern name: ',
-            validate: ans => ans !== "" || "Cannot be empty"
-        },
-        {
-            name: 'email',
-            message: ans => `Enter ${ans.name} email: `,
-            default: ans => `${ans.name}@${emailDomain}.com`,
-            validate: answer => emailRegex.test(answer) || "Invalid email address"
-        },
-        {   name: 'attr',
-            message: ans => `Enter ${ans.name} school: `,
-            validate: ans => ans !== "" || "Cannot be empty"
-        }
-    ];
-
     let ans = await inquirer.prompt(menuQuestion);
     //console.log(ans.menu);
     while (ans.menu !== 'Quit'){
-        let role = ans.menu.split(' ')[2];
-        //console.log(role);
-        let questions;
-        if (role == 'engineer')
-            questions = engineerQuestions;
-        else
-            questions = internQuestions;
-        let answers = await inquirer.prompt(questions);
+        role = ans.menu.split(' ')[2];
+        employeeQuestions[0].message = ans => `Enter ${role} name: `;
+        employeeQuestions[2].message = ans => `Enter ${ans.name} ${attrMap[role]}: `;
+        let answers = await inquirer.prompt(employeeQuestions);
         answers['role'] = role;
         team.push(getEmployee(answers));
         ans = await inquirer.prompt(menuQuestion);
