@@ -6,65 +6,93 @@ const utils = require('./utils');
 
 async function getTeamInfo(){
 
-    const attrMap = {
-        'Intern': 'school',
-        'Engineer': 'github username',
-        'Manager': 'office number'
-    }
-
-    const companyQuestions = [
+    const companyQuestion = [
         {
             name: 'company',
             message: 'What is the name of the company? '
         },
-        {
-            type: 'input',
-            name: 'employeeCount',
-            message: 'How many employees are on your team? ',
-            validate: x => (isNaN(parseInt(x)) || parseInt(x) <= 0) ? 'Please enter a whole positive number': true,
-            filter: x => isNaN(parseInt(x)) ? x : parseInt(x, 10)
-        }
     ];
 
-    const {company, employeeCount} = await inquirer.prompt(companyQuestions);
+    const {company} = await inquirer.prompt(companyQuestion);
     const emailDomain = utils.generateEmailDomain(company);
 
-    const employeeQuestions = [
+    const managerQuestions = [
         {
             name: 'name',
-            message: 'Employee name: '
+            message: "Enter the manager's name: ",
         },
         {
             name: 'email',
-            message: 'Employee email: ',
+            message: ans =>  `Enter ${ans.name} email: `,
             default: ans => `${ans.name}@${emailDomain}.com`
         },
         {
-            type: 'list',
-            name: 'role',
-            message: 'Employee Role: ',
-            choices: ['Intern', 'Engineer', 'Manager']
-        },
-        {   name: 'attr',
-            message: ans => `Enter ${ans.role.toLowerCase()} ${attrMap[ans.role]}`
+            name: 'office',
+            message: ans => `Enter ${ans.name} office number: `,
         }
     ];
 
-    var employees = [];
-    for(let i = 0; i < employeeCount; ++i){
-        console.log(`Creating employee ${i+1} of ${employeeCount}`);
-        employees.push(await inquirer.prompt(employeeQuestions));
-    }
-    return employees.map(x => {
-        switch(x.role){
-            case 'Intern':
-                return new Intern(x.name, x.email, x.attr);
-            case 'Engineer':
-                return new Engineer(x.name, x.email, x.attr);
-            case 'Manager':
-                return new Manager(x.name, x.email, x.attr);
+    const answerManager = await inquirer.prompt(managerQuestions);
+    const manager = new Manager(answerManager.name, answerManager.email, answerManager.office);
+    let team = [manager];
+
+    const menuQuestion = [
+        {
+            name: 'menu',
+            type: 'list',
+            message: 'Add a team member:',
+            choices: ['Add an engineer', 'Add an intern', 'Quit']
         }
-    });
+    ]
+
+    const engineerQuestions = [
+        {
+            name: 'name',
+            message: 'Enter enginner name: '
+        },
+        {
+            name: 'email',
+            message: ans => `Enter ${ans.name} email: `,
+            default: ans => `${ans.name}@${emailDomain}.com`
+        },
+        {   name: 'attr',
+            message: ans => `Enter ${ans.name} github account: `
+        }
+    ];
+
+    const internQuestions = [
+        {
+            name: 'name',
+            message: 'Enter intern name: '
+        },
+        {
+            name: 'email',
+            message: ans => `Enter ${ans.name} email: `,
+            default: ans => `${ans.name}@${emailDomain}.com`
+        },
+        {   name: 'attr',
+            message: ans => `Enter ${ans.name} school: `
+        }
+    ];
+
+    let ans = await inquirer.prompt(menuQuestion);
+    //console.log(ans.menu);
+    while (ans.menu !== 'Quit'){
+        let role = ans.menu.split(' ')[2];
+        //console.log(role);
+        let questions;
+        if (role == 'engineer')
+            questions = engineerQuestions;
+        else
+            questions = internQuestions;
+        let answers = await inquirer.prompt(questions);
+        if (role == 'engineer')
+            team.push(new Engineer(answers.name, answers.email, answers.attr));
+        else
+            team.push(new Engineer(answers.name, answers.email, answers.attr));
+        ans = await inquirer.prompt(menuQuestion);
+    }
+    return {'team':team, 'company':company};
 }
 
 module.exports = getTeamInfo;
