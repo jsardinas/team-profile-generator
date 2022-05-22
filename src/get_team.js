@@ -15,6 +15,8 @@ async function getTeamInfo(){
     const {company} = await inquirer.prompt(companyQuestion);
     const emailDomain = utils.generateEmailDomain(company);
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     const managerQuestions = [
         {
             name: 'name',
@@ -24,7 +26,8 @@ async function getTeamInfo(){
         {
             name: 'email',
             message: ans => `Enter ${ans.name} email: `,
-            default: ans => `${ans.name}@${emailDomain}.com`
+            default: ans => `${ans.name}@${emailDomain}.com`,
+            validate: answer => emailRegex.test(answer) || "Invalid email address"
         },
         {
             name: 'attr',
@@ -56,7 +59,8 @@ async function getTeamInfo(){
         {
             name: 'email',
             message: ans => `Enter ${ans.name} email: `,
-            default: ans => `${ans.name}@${emailDomain}.com`
+            default: ans => `${ans.name}@${emailDomain}.com`,
+            validate: answer => emailRegex.test(answer) || "Invalid email address"
         },
         {   name: 'attr',
             message: ans => `Enter ${ans.name} github account: `,
@@ -73,7 +77,8 @@ async function getTeamInfo(){
         {
             name: 'email',
             message: ans => `Enter ${ans.name} email: `,
-            default: ans => `${ans.name}@${emailDomain}.com`
+            default: ans => `${ans.name}@${emailDomain}.com`,
+            validate: answer => emailRegex.test(answer) || "Invalid email address"
         },
         {   name: 'attr',
             message: ans => `Enter ${ans.name} school: `,
