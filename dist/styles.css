@@ -1,0 +1,18 @@
+.jumbotron{
+    background-color: darksalmon;
+    text-align: center;
+    padding: 20px;
+}
+
+main{
+    background-color: #f7fbff;
+}
+
+.custom-title{
+    background-color: #267afb;
+    color: white;
+}
+
+.custom-card{
+    margin: 10px;
+}
