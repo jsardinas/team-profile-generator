@@ -43,7 +43,6 @@ function createTeamPage(teamInfo, outputPath){
         });
     
     const employeesElements = employeeCards.reduce((html, card) => html + '\n' + card, '');
-    
 
     const content = `<!DOCTYPE html>
     <html lang="en">

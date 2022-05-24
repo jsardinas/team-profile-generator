@@ -4,9 +4,11 @@ const name = 'Javier';
 const email = `${name}@company.com`;
 
 describe("Employee", () => {
-    describe('Objct Creation', ()=> {
+    describe('Object Creation', ()=> {
         it("should create an employee", () => {
+        
             const employee = new Employee(name, email);
+        
             expect(employee.name).toEqual(name);
             expect(employee.email).toEqual(email);
         });
