@@ -2,7 +2,7 @@
 ![badge](https://img.shields.io/badge/license-ISC-brightgreen)
 
 ## Description
-Simple app to generate an html page for a team profile
+Simple [app](./index.js) to generate an [html page](./dist/index.html) for a team profile
 
 ## Table of Contents
 - [Installation](#installation)
@@ -18,6 +18,14 @@ Navigate to where `package.json` is and type `npm install` to install the depend
 1. `node index.js` to execute the app
 1. answer the prompts with the team information.
 1. The script will generate the target html in the `dist` directory.
+
+![](./readme/walkthrough.gif)
+
+A high quality video of the walkthrough can be found [here](https://youtu.be/7ll4HEqnqSU).
+
+The generated page will look similar to this:
+![](./readme/main.png)
+
 
 ## License
 ![badge](https://img.shields.io/badge/license-ISC-brightgreen)
